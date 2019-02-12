@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef RECEIVER_H
-#define RECEIVER_H
+#ifndef Receiver_h
+#define Receiver_h
 
 //#include "Arduino.h"
 
@@ -19,11 +19,11 @@ class Receiver {
             //set pin
             //pinMode(pin, INPUT_PULLUP);
             channel_values = new int[6];
-        };
+        }
 
         ~Receiver() {
             delete channel_values;
-        };
+        }
 
         void update();
         int getChannelValue(int channel);
