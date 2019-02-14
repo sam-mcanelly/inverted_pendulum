@@ -15,6 +15,9 @@ void Receiver::update() {
     //wait for long gap
     //once long gap is detected, start reading pulse-ins
     //update channel_value array with new values
+    //set active variable based on the designated channel
+    //if(channel_value[ARM_CHANNEL] > SOME_VALUE)
+    //  *active=true
 }
 
 int Receiver::getChannelValue(int channel) {

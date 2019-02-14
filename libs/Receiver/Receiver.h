@@ -15,9 +15,10 @@
 
 class Receiver {
     public:
-        Receiver(int pin) {
+        Receiver(int pin, bool *_active) {
             //set pin
             //pinMode(pin, INPUT_PULLUP);
+            active = _active;
             channel_values = new int[6];
         }
 
@@ -29,6 +30,7 @@ class Receiver {
         int getChannelValue(int channel);
 
     private:
+        bool *active;
         int *channel_values;
 };
 

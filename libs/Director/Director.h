@@ -16,6 +16,10 @@
 //#include "PIDLibrary.h"
 #include "Receiver.h"
 
+#define min_start_threshold -1
+#define max_start_threshold 1
+#define within_range(a) (((a) > (min_start_threshold)) && ((a) < (max_start_threshold)))
+
 enum Channel {
     throttle=0,
     turn=1
@@ -24,7 +28,8 @@ enum Channel {
 class Director {
     public:
         Director(int receiver_pin, int motor_pins[4], int pendulum_pin) {
-            receiver = new Receiver(receiver_pin);
+            active=false;
+            receiver = new Receiver(receiver_pin, &active);
         };
 
         ~Director() {
@@ -33,13 +38,16 @@ class Director {
         }
 
         //start and stop control loop
-        void start();
-        void stop();
+        void reset();
 
     private:
+        bool active;
         Receiver* receiver;
         //motor controller object;
         //pendulum reader object; 
+
+        //main control loop
+        void loop();
 
         int getThrottleValue() { return receiver->getChannelValue(throttle); }
         int getTurnValue() { return receiver->getChannelValue(turn); }
