@@ -10,20 +10,42 @@
 
 #include "Receiver.h"
 
-void Receiver::update() {
-    //read pulse in
-    //wait for long gap
-    //once long gap is detected, start reading pulse-ins
-    //update channel_value array with new values
-    //set active variable based on the designated channel
-    //if(channel_value[ARM_CHANNEL] > SOME_VALUE)
-    //  *active=true
+//TODO: sanity check on values? (test to see if necessary)
+//      turn off interrupts? (time this function)
+void Receiver::update() 
+{
+    bool updated = false;
+    int i = 0;
+
+    long start_time = micros();
+
+    while(!updated) {
+        if(pulseIn(pin, HIGH) > SYNC_DELAY) {
+            for(i = 0; i < CHANNEL_COUNT; i++) {
+                channel_values[i] = pulseIn(pin, HIGH);
+            }
+
+            if(channel_values[ARM_CHANNEL] > ACTIVE_THRESHOLD) {
+                *active = true;
+            } else {
+                *active = false;
+            }
+
+            updated = true;
+        }
+
+        if(micros() - start_time > UPDATE_TIMEOUT_THRESHOLD) {
+            Serial.println("Error: PPM signal not found!");
+            return;
+        }
+    }
 }
 
-int Receiver::getChannelValue(int channel) {
+int Receiver::getChannelValue(int channel)
+{
     //check bounds
-    if(channel < 1 || channel > 6)
+    if(channel < 1 || channel > CHANNEL_COUNT)
         return -1;
     
-    return channel_values[channel];
+    return channel_values[channel - 1];
 }

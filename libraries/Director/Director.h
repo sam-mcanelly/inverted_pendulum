@@ -10,9 +10,9 @@
  */
 
 #ifndef Director_h
-#define Director_H
+#define Director_h
 
-//#include "Arudino.h"
+#include "Arduino.h"
 //#include "PIDLibrary.h"
 #include "Receiver.h"
 
@@ -20,19 +20,21 @@
 #define max_start_threshold 1
 #define within_range(a) (((a) > (min_start_threshold)) && ((a) < (max_start_threshold)))
 
-enum Channel {
+enum channel_t {
     throttle=0,
     turn=1
 };
 
 class Director {
     public:
-        Director(int receiver_pin, int motor_pins[4], int pendulum_pin) {
+        Director(int receiver_pin, int motor_pins[4], int pendulum_pin)
+        {
             active=false;
             receiver = new Receiver(receiver_pin, &active);
         };
 
-        ~Director() {
+        ~Director()
+        {
             delete receiver;
             //delete other dynamically allocated objects
         }
