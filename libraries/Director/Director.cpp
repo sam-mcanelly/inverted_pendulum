@@ -11,7 +11,8 @@
 
 #include "Director.h"
 
-void Director::reset() {
+void Director::reset()
+{
     //constantly loop and look for an arm signal
     while(active == false) {
         //do nothing and wait
@@ -29,7 +30,8 @@ void Director::reset() {
     loop();
 }
 
-void Director::loop() {
+void Director::loop()
+{
     //create PID controller object here
     double set_point, input, output;
     //ex:
@@ -49,6 +51,7 @@ void Director::loop() {
     reset();
 }
 
-double Director::convert_throttle(int throttle_value) {
+double Director::convert_throttle(int throttle_value)
+{
 
 }

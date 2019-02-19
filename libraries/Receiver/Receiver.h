@@ -11,18 +11,27 @@
 #ifndef Receiver_h
 #define Receiver_h
 
-//#include "Arduino.h"
+#include "Arduino.h"
+
+#define SYNC_DELAY 4000
+#define CHANNEL_COUNT 6
+#define ARM_CHANNEL 3
+#define ACTIVE_THRESHOLD 1500
+#define UPDATE_TIMEOUT_THRESHOLD 30000 //30ms (chosen from Wikipedia PPM frame length)
 
 class Receiver {
     public:
-        Receiver(int pin, bool *_active) {
+        Receiver(int _pin, bool *_active)
+        {
             //set pin
-            //pinMode(pin, INPUT_PULLUP);
+            pin=_pin;
+            pinMode(pin, INPUT_PULLUP);
             active = _active;
             channel_values = new int[6];
         }
 
-        ~Receiver() {
+        ~Receiver()
+        {
             delete channel_values;
         }
 
@@ -32,6 +41,7 @@ class Receiver {
     private:
         bool *active;
         int *channel_values;
+        int pin;
 };
 
 #endif

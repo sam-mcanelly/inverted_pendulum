@@ -42,6 +42,7 @@
 	 enB = passedPins[3];
 	 in3 = passedPins[4];
 	 in4 = passedPins[5];
+	 
 	 initialize();
  }
  
@@ -57,13 +58,13 @@
 }
 
 
-/*Note: Speed is a variable from 0 to 255
- *      and "forward" defines wheel rotation
+/*Note: "speed" is a variable from 0 to 255
+ *      and "direction" defines wheel rotation
  *		with respect to the the wiring 
  */
-void MotorControl::turnWheelA(bool forward, int speed)
+void MotorControl::turnWheelA(bool direction, int speed)
 {
-	if(forward) {
+	if(direction) {
 		digitalWrite(in1, HIGH);
 		digitalWrite(in2, LOW);
 		digitalWrite(enA, speed);
@@ -74,9 +75,9 @@ void MotorControl::turnWheelA(bool forward, int speed)
 	}
 }
 
-void MotorControl::turnWheelB(bool forward, int speed)
+void MotorControl::turnWheelB(bool direction, int speed)
 {
-	if(forward) {
+	if(direction) {
 		digitalWrite(in3, HIGH);
 		digitalWrite(in4, LOW);
 		digitalWrite(enB, speed);
@@ -87,8 +88,14 @@ void MotorControl::turnWheelB(bool forward, int speed)
 	}
 }
 
-void MotorControl::moveBothWheels(bool forward, int speed)
+void MotorControl::moveBothWheels(bool direction, int speed)
 {
-	turnWheelA(forward, speed);
-	turnWheelB(forward, speed);
+	turnWheelA(direction, speed);
+	turnWheelB(direction, speed);
+}
+
+void MotorControl::moveWheelsOpposite(bool turnDirection, int speed)
+{
+	turnWheelA(turnDirection, speed);
+	turnWheelB(!turnDirection, speed);
 }
