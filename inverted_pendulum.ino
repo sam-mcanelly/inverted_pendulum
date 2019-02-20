@@ -1,5 +1,6 @@
 #include <Receiver.h>
 #include <Director.h>
+#include <MotorController.h>
 
 void setup() {
   // put your setup code here, to run once:
