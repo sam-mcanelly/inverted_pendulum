@@ -27,7 +27,11 @@ class Receiver {
             pin=_pin;
             pinMode(pin, INPUT_PULLUP);
             active = _active;
-            channel_values = new int[6];
+            channel_values = new int[CHANNEL_COUNT];
+
+            for(int i = 0; i < CHANNEL_COUNT; i++) {
+                channel_values[i] = 0;
+            }
         }
 
         ~Receiver()
@@ -37,6 +41,7 @@ class Receiver {
 
         void update();
         int getChannelValue(int channel);
+        const int *getAllChannels();
 
     private:
         bool *active;
