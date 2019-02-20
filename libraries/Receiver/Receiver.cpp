@@ -49,3 +49,8 @@ int Receiver::getChannelValue(int channel)
     
     return channel_values[channel - 1];
 }
+
+const int *Receiver::getAllChannels()
+{
+    return channel_values;
+}
