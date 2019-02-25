@@ -61,11 +61,11 @@ void MotorController::turnWheelA(bool forward, int speed)
 	if(forward) {
 		digitalWrite(pins[in1], HIGH);
 		digitalWrite(pins[in2], LOW);
-		digitalWrite(pins[enA], speed);
+		analogWrite(pins[enA], speed);
 	} else {
 		digitalWrite(pins[in1], LOW);
 		digitalWrite(pins[in2], HIGH);
-		digitalWrite(pins[enA], speed);
+		analogWrite(pins[enA], speed);
 	}
 }
 
@@ -74,11 +74,11 @@ void MotorController::turnWheelB(bool forward, int speed)
 	if(forward) {
 		digitalWrite(pins[in3], HIGH);
 		digitalWrite(pins[in4], LOW);
-		digitalWrite(pins[enB], speed);
+		analogWrite(pins[enB], speed);
 	} else {
 		digitalWrite(pins[in3], LOW);
 		digitalWrite(pins[in4], HIGH);
-		digitalWrite(pins[enB], speed);
+		analogWrite(pins[enB], speed);
 	}
 }
 
