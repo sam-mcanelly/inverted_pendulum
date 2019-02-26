@@ -27,9 +27,12 @@
 		void setPinsBack(int *passedPins);
 		void setPins(int *pinsFront, int *pinsBack);
 		
-		
-		void turn(bool direction, int speed);
-		void move(bool direction, int speed);
+		/*velocity is an integer from -255 to 255 with positive and negative representing direction
+		 * Positive = FORWARD (move) and LEFT (turn);
+		 * Negative = REVERSE (move) and Right(turn);
+		 */
+		void turn(int velocity);
+		void move(int velocity);
 		void turnSingleWheelTest(int wheel, int speed);
 		
 		//Note: default destructor should work fine

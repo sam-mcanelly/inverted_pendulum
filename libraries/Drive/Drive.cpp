@@ -33,29 +33,29 @@
  
  void Drive::setPins(int *pinsFront, int *pinsBack)
  {
-	 Serial.println("")
-	 for(int i = 0; i < front.MC_PIN_COUNT; i++) {
+	/* Serial.println("Setting Pins [Drive accessed]");
+	 for(int i = 0; i < 6; i++) {
 		Serial.print("Pin numbers: ");
 		Serial.print(pinsFront[i]);
-		serial.print(",");
+		Serial.print(",");
 		Serial.println(pinsBack[i]);
 	}
-	 
+	 */
 	 front.setPins(pinsFront);
 	 back.setPins(pinsBack);
  }
  
- void Drive::move(bool direction, int speed)
+ void Drive::move(int velocity)
  {
-	 front.moveBothWheels(direction, speed);
-	 back.moveBothWheels(direction, speed);
+	 front.moveBothWheels(velocity);
+	 back.moveBothWheels(-velocity);
  }
  
  
- void Drive::turn(bool direction, int speed)
+ void Drive::turn(int velocity)
  {
-	 front.moveWheelsOpposite(direction, speed);
-	 back.moveWheelsOpposite(direction, speed);
+	 front.moveWheelsOpposite(velocity);
+	 back.moveWheelsOpposite(velocity);
 		 
  }
  void Drive::turnSingleWheelTest(int wheel, int speed)
@@ -63,20 +63,20 @@
 	 switch(wheel)
 	 {
 		 case 0:
-			front.turnWheelA(true, speed);
-			Serial.println("Front wheel A turned");
+			front.turnWheelA(speed);
+			//Serial.println("Front wheel A turned");
 		 break;
 		 case 1:
-			front.turnWheelB(true, speed);
-			Serial.println("Front wheel B turned");
+			front.turnWheelB(speed);
+			//Serial.println("Front wheel B turned");
 		 break;
 		 case 2:
-			back.turnWheelA(true, speed);
-			Serial.println("Back wheel A turned");
+			back.turnWheelA(speed);
+			//Serial.println("Back wheel A turned");
 		 break;
 		 case 3:
-			back.turnWheelB(true, speed);
-			Serial.println("Back wheel B turned");
+			back.turnWheelB(speed);
+			//Serial.println("Back wheel B turned");
 		 break;
 		 default: Serial.println("Invalid number");
 	 }
