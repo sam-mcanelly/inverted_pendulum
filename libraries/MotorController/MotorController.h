@@ -48,7 +48,7 @@ class MotorController {
 			//this will only be needed for dynamically allocated variables
 			if(pins != defaultPins)
 				delete pins;
-		};
+		}; 
     private:
 		int *pins;
 		int defaultPins[MC_PIN_COUNT] = {10, 9, 8, 5, 7, 6};

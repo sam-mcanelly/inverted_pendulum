@@ -13,7 +13,7 @@
 /* DISCLAIMER, PINS = {enA,in1,in2,enB,in3,in4} */
  MotorController::MotorController()
  {
-	 setPinsDefault();
+	// setPinsDefault();
  }
  
  MotorController::MotorController(int *passedPins)
@@ -31,15 +31,19 @@
  
  void MotorController::setPins(int *passedPins)
  {
+	 
 	//must make a new array if default pins were used first
 	if(pins == defaultPins) {
 		pins = new int[MC_PIN_COUNT];
+		Serial.println("MotorController pins reset");
 	}
 
 	for(int i = 0; i < MC_PIN_COUNT; i++) {
+		Serial.print("Pin number: ");
+		Serial.println(passedPins[i]);
 		pins[i] = passedPins[i];
 	}
-	
+	Serial.println("Pins set");
 	initialize();
  }
  
@@ -49,6 +53,7 @@
 	for(int i = 0; i < MC_PIN_COUNT; i++) {
 		pinMode(pins[i], OUTPUT);
 	}
+	Serial.println("Pins Initialized");
 }
 
 
