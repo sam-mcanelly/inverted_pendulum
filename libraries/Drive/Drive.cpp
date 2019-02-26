@@ -33,6 +33,7 @@
  
  void Drive::setPins(int *pinsFront, int *pinsBack)
  {
+	 Serial.println("")
 	 for(int i = 0; i < front.MC_PIN_COUNT; i++) {
 		Serial.print("Pin numbers: ");
 		Serial.print(pinsFront[i]);
