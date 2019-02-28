@@ -13,7 +13,7 @@
 /* DISCLAIMER, PINS = {enA,in1,in2,enB,in3,in4} */
  MotorController::MotorController()
  {
-	 setPinsDefault();
+	// setPinsDefault();
  }
  
  MotorController::MotorController(int *passedPins)
@@ -25,21 +25,15 @@
  
  void MotorController::setPinsDefault()
  {
-	pins = defaultPins;
+	//pins = defaultPins;
 	initialize();
  }
  
  void MotorController::setPins(int *passedPins)
  {
-	//must make a new array if default pins were used first
-	if(pins == defaultPins) {
-		pins = new int[MC_PIN_COUNT];
-	}
-
 	for(int i = 0; i < MC_PIN_COUNT; i++) {
 		pins[i] = passedPins[i];
 	}
-	
 	initialize();
  }
  
@@ -52,44 +46,46 @@
 }
 
 
-/*Note: Speed is a variable from 0 to 255
- *      and "forward" defines wheel rotation
- *		with respect to the the wiring 
+/*Note: Velocity is a variable from -255 to 255
+ *      with polarity defining wheel rotation direction
+ *		and magnitude defining wheel speed
  */
-void MotorController::turnWheelA(bool forward, int speed)
+void MotorController::turnWheelA(int velocity)
 {
-	if(forward) {
-		digitalWrite(pins[in1], HIGH);
-		digitalWrite(pins[in2], LOW);
-		digitalWrite(pins[enA], speed);
-	} else {
+	if(velocity>>15 & 1)
+	{
 		digitalWrite(pins[in1], LOW);
 		digitalWrite(pins[in2], HIGH);
-		digitalWrite(pins[enA], speed);
+	} else {
+		digitalWrite(pins[in1], HIGH);
+		digitalWrite(pins[in2], LOW);
 	}
+	analogWrite(pins[enA], (velocity < 0) ? -1 * velocity : velocity );
 }
 
-void MotorController::turnWheelB(bool forward, int speed)
+void MotorController::turnWheelB(int velocity)
 {
-	if(forward) {
-		digitalWrite(pins[in3], HIGH);
-		digitalWrite(pins[in4], LOW);
-		digitalWrite(pins[enB], speed);
-	} else {
+	if(velocity>>15 & 1)
+	{
 		digitalWrite(pins[in3], LOW);
 		digitalWrite(pins[in4], HIGH);
-		digitalWrite(pins[enB], speed);
+	} else {
+		digitalWrite(pins[in3], HIGH);
+		digitalWrite(pins[in4], LOW);
 	}
+	analogWrite(pins[enB], (velocity < 0) ? -1 * velocity : velocity );
+	
 }
 
-void MotorController::moveBothWheels(bool forward, int speed)
+void MotorController::moveBothWheels(int velocity)
 {
-	turnWheelA(forward, speed);
-	turnWheelB(forward, speed);
+	
+	turnWheelA(velocity);
+	turnWheelB(velocity);
 }
 
-void MotorController::moveWheelsOpposite(bool turnDirection, int speed)
+void MotorController::moveWheelsOpposite(int velocity)
 {
-	turnWheelA(turnDirection, speed);
-	turnWheelB(!turnDirection, speed);
+	turnWheelA(velocity);
+	turnWheelB(velocity);
 }

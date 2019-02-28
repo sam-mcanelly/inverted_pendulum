@@ -1,0 +1,5 @@
+Test <TimedAction.h>
+Use - psuedo "thread"
+Cant use actual multithreading due to single core, but we can act like one!
+--------------------------------------------------------------------------
+attachInterrupt(Pin#,method,ACTION)

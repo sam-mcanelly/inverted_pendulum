@@ -15,8 +15,8 @@
 #include <digitalWriteFast.h>
 
 #define ENCODER_INTERRUPT 4
-#define PIN_A 19
-#define PIN_B 25
+#define PIN_A 2
+#define PIN_B 3
 #define START_TICKS 256 //parallel to ground (1/4 of 1024)
 
 class Encoder {
@@ -27,6 +27,7 @@ class Encoder {
         int getPosition();
 
     private:
+		static volatile bool encoder_A_set;
         static volatile bool encoder_B_set;
         static volatile int encoder_ticks;
 
