@@ -10,12 +10,13 @@
 
 #include "Encoder.h"
 
+volatile bool Encoder::encoder_B_set = false;
+volatile int Encoder::encoder_ticks = START_TICKS;
+
 void Encoder::init()
 {
     pinMode(PIN_A, INPUT_PULLUP);
     pinMode(PIN_B, INPUT_PULLUP);
-
-    encoder_ticks = START_TICKS;
 
     attachInterrupt(ENCODER_INTERRUPT, Encoder::_tick, RISING);
 }

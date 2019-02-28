@@ -19,12 +19,11 @@ void Director::reset()
         receiver->update();
     }
 
-    int starting_position = 0/*pendulum_reader->getPosition()*/;
+    int starting_position = encoder.getPosition();
 
     //wait for pendulum to be in an acceptable start range
     while(!within_range(starting_position)) {
-        //delay here to wait?
-        starting_position = 0/*pendulum_reader->getPosition()*/;
+        starting_position = encoder.getPosition();
     }
 
     loop();
@@ -35,14 +34,13 @@ void Director::loop()
     //create PID controller object here
     double set_point, input, output;
     //ex:
-    //PID myPID(&input, &output, &set_point,2,5,1, DIRECT);
 
     while(active == true) {
         receiver->update();
 
-        //set_point = convert_throttle(getThrottleValue());
-        //input=pendulum_reader->getPosition();
-        //myPID.compute()
+        set_point = convert_throttle(receiver->getChannelValue(throttle));
+        input = encoder.getPosition();
+        //compute PID
         //(maybe convert output here to another value)
         //(could also be handled in the motor_controller object)
         //motor_controller->set_motors(output);
@@ -51,7 +49,8 @@ void Director::loop()
     reset();
 }
 
-double Director::convert_throttle(int throttle_value)
+int Director::convert_throttle(int throttle_value)
 {
-
+    //normalize throttle value to range specified by MAX_ANGLE_TICKS
+    return (int)((throttle_value - 1500) / MAX_ANGLE_TICKS);
 }
