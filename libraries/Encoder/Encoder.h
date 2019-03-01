@@ -21,7 +21,8 @@
 
 class Encoder {
     public:
-        Encoder(){}
+        Encoder(){
+		}
 
         void init();
         int getPosition();
@@ -30,7 +31,11 @@ class Encoder {
 		static volatile bool encoder_A_set;
         static volatile bool encoder_B_set;
         static volatile int encoder_ticks;
-
+		static volatile int newVal;
+		static volatile int oldVal;
+		static volatile int outVal;
+		static const int matrixVal [16];
+	
         static void _tick();
 };
 
