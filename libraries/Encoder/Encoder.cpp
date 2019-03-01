@@ -18,13 +18,23 @@ volatile bool Encoder::encoder_B_set = false;
 volatile int Encoder::encoder_ticks = START_TICKS;
 const int Encoder::matrixVal [16] = {0,-1,1,2,1,0,2,-1,-1,2,0,1,2,1,-1,0};
 
+bool Encoder::is_init = false;
+
 void Encoder::init()
 {
+	if(is_init)
+	{
+		Serial.println("Warning! Encoder already initialized");
+		return;
+	}
+
     pinMode(PIN_A, INPUT_PULLUP);
     pinMode(PIN_B, INPUT_PULLUP);
 
     attachInterrupt(digitalPinToInterrupt(PIN_A), Encoder::_tick, CHANGE);
 	attachInterrupt(digitalPinToInterrupt(PIN_B), Encoder::_tick, CHANGE);
+
+	is_init = true;
 }
 
 int Encoder::getPosition()
