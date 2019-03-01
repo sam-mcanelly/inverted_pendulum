@@ -2,6 +2,7 @@
  *
  * Class for reading ticks from quadrature encoder
  *
+ * Blake Giles
  * Sam McAnelly
  * Oklahoma State University
  * Spring 2019
