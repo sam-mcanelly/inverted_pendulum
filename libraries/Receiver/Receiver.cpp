@@ -20,9 +20,9 @@ void Receiver::update()
     long start_time = micros();
 
     while(!updated) {
-        if(pulseIn(pin, HIGH) > SYNC_DELAY) {
+        if(pulseIn(pin, LOW, UPDATE_TIMEOUT_THRESHOLD) >= SYNC_DELAY) {
             for(i = 0; i < CHANNEL_COUNT; i++) {
-                channel_values[i] = pulseIn(pin, HIGH);
+                channel_values[i] = pulseIn(pin, LOW, CHANNEL_TIMEOUT_THRESHOLD);
             }
 
             if(channel_values[ARM_CHANNEL] > ACTIVE_THRESHOLD) {

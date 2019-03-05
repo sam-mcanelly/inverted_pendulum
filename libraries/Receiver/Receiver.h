@@ -13,40 +13,33 @@
 
 #include "Arduino.h"
 
-#define SYNC_DELAY 4000
-#define CHANNEL_COUNT 6
-#define ARM_CHANNEL 3
+#define SYNC_DELAY 11000
+#define CHANNEL_COUNT 3
+#define ARM_CHANNEL 2
 #define ACTIVE_THRESHOLD 1500
-#define UPDATE_TIMEOUT_THRESHOLD 30000 //30ms (chosen from Wikipedia PPM frame length)
+#define UPDATE_TIMEOUT_THRESHOLD 20000 //us
+#define CHANNEL_TIMEOUT_THRESHOLD 3000 //us
 
 class Receiver {
     public:
-        Receiver(int _pin, bool *_active)
+        Receiver(int pin, bool *active)
         {
             //set pin
-            pin=_pin;
-            pinMode(pin, INPUT_PULLUP);
-            active = _active;
-            channel_values = new int[CHANNEL_COUNT];
-
-            for(int i = 0; i < CHANNEL_COUNT; i++) {
-                channel_values[i] = 0;
-            }
+            _pin = pin;
+            pinMode(pin, INPUT);
+            _active = active;
         }
 
-        ~Receiver()
-        {
-            delete channel_values;
-        }
+        ~Receiver() { }
 
         void update();
         int getChannelValue(int channel);
         const int *getAllChannels();
 
     private:
-        bool *active;
-        int *channel_values;
-        int pin;
+        bool *_active;
+        int channel_values[3] = {1000, 1000, 1000};
+        int _pin;
 };
 
 #endif
