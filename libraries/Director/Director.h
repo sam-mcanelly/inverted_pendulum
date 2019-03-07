@@ -13,6 +13,7 @@
 #define Director_h
 
 #include "Arduino.h"
+#include "Drive.h"
 #include "Encoder.h"
 #include "FastPID.h"
 //#include "Receiver.h"
@@ -53,6 +54,7 @@ class Director {
         bool active;
         //Receiver* receiver;
         static Encoder encoder;
+        static Drive driver;
         static FastPID pid_controller;
         static bool is_init;
         //Drive drive;

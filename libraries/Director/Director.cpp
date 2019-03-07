@@ -31,6 +31,8 @@ void Director::init()
     encoder.init();
     Serial.println("Encoder initialized");
 
+    //initialize driver
+
     is_init = true;
 
 }
@@ -79,12 +81,7 @@ void Director::loop()
         {
             input = encoder.getPosition();
             output = pid_controller.step(set_point, input);
-            Serial.print("Encoder position, PID output: {");
-            Serial.print(input);
-            Serial.print(", ");
-            Serial.print(output);
-            Serial.println("}");
-            //motor_controller->set_motors(output);
+            driver.move(output);
         }
 
         last_time = cur_time;
