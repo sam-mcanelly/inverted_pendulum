@@ -14,11 +14,6 @@
  
  class Drive {
 	 public:
-	 
-		const bool LEFT = false;
-		const bool RIGHT = true;
-		const bool FORWARD = true;
-		const bool BACKWARD = false;
 		
 		Drive();
 		Drive(int *pinsA, int *pinsB);
@@ -40,6 +35,8 @@
 	 private:
 		MotorController front;
 		MotorController back;
+		int defaultPinsFront[6] = {6,A3,A2,5,A4,A5};
+		int defaultPinsBack[6] = {10,8,7,9,A1,A0};
  };
  
  #endif
