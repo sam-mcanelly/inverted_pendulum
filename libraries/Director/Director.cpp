@@ -31,8 +31,6 @@ void Director::init()
     encoder.init();
     Serial.println("Encoder initialized");
 
-    //initialize driver
-
     is_init = true;
 
 }
@@ -80,6 +78,10 @@ void Director::loop()
         if(cur_time - last_time > 10)
         {
             input = encoder.getPosition();
+            if(input > 400 || input < -400) 
+            {
+                break;
+            }
             output = pid_controller.step(set_point, input);
             driver.move(output);
         }
