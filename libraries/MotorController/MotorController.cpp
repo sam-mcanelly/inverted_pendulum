@@ -57,7 +57,7 @@ void MotorController::turnWheelA(int velocity)
 	} else {
 		digitalWrite(pins[in1], HIGH);
 		digitalWrite(pins[in2], LOW);
-		analogWrite(pins[enA],velocity)
+		analogWrite(pins[enA],velocity);
 	}
 }
 

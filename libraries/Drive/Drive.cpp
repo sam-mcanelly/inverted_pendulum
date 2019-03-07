@@ -12,7 +12,8 @@
  
  Drive::Drive()
  {
-	// Serial.println("Drive created");
+	front.setPins(defaultPinsFront);
+	back.setPins(defaultPinsBack);
  }
  
  Drive::Drive(int *pinsA, int *pinsB)
