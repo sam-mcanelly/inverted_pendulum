@@ -14,7 +14,7 @@
 
 bool Director::is_init = false;
 // arguments; (P, I, D, Hz, bits, signed)
-FastPID Director::pid_controller(1.5, 0.0, 0.0, 100, 16, true);
+FastPID Director::pid_controller(2.8, 1.5, 0.0, 100, 16, true);
 
 void Director::init() 
 {
@@ -83,6 +83,10 @@ void Director::loop()
                 break;
             }
             output = pid_controller.step(set_point, input);
+            Serial.print("input: ");
+            Serial.print(input);
+            Serial.print("output:");
+            Serial.println(output);
             driver.move(output);
         }
 
