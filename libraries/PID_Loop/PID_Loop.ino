@@ -3,6 +3,7 @@
 #include "Encoder.h"
 #include "PID_Loop.h"
 
+Drive drive;
 Encoder encoder;
 PIDLoop PID_Loop;
 
@@ -16,5 +17,5 @@ void loop() {
   Serial.print("Input: ");
   Serial.print(100);
   Serial.print(", Output: ");
-  Serial.println(PID_Loop.Position_to_Speed(0, 20));
+  drive.move(0, 20));
 }
