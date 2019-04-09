@@ -10,6 +10,7 @@ PIDLoop PID_Loop;
 void setup() {
   Serial.begin(9600);
   encoder.init();
+  drive.initialize();
   PID_Loop.Configure();
 }
 
