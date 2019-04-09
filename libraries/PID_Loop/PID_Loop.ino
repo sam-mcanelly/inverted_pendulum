@@ -18,5 +18,5 @@ void loop() {
   Serial.print("Input: ");
   Serial.print(100);
   Serial.print(", Output: ");
-  drive.move(0, 20));
+  drive.move(PID_Loop.Position_to_Speed(0, encoder.getPosition()));
 }
