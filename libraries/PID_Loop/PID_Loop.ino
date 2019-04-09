@@ -1,23 +1,20 @@
+#include <digitalWriteFast.h>
 #include <Arduino.h>
-#include "FastPID.cpp"
-#include "FastPID.h"
-#include "Encoder.cpp"
 #include "Encoder.h"
+#include "PID_Loop.h"
 
-int Position_to_Speed(int, int);
-float Kp = 0.1, Ki = 0.1, Kd = 0.1, Hz = 100;//Kp, Ki, and Kd need to be tested
-int output_bits = 16, output = 0;  
-FastPID PID_Loop(Kp, Ki, Kd, Hz, output_bits, true);
 Encoder encoder;
+PIDLoop PID_Loop;
 
 void setup() {
-  
+  Serial.begin(9600);
+  encoder.init();
+  PID_Loop.Configure();
 }
 
 void loop() {
-  Serial.println(Position_to_Speed(encoder.getPosition(), 0));
-}
-
-int Position_to_Speed (int Current_Position, int Set_Point) {
-    return PID_Loop.step(Set_Point, Current_Position);
+  Serial.print("Input: ");
+  Serial.print(100);
+  Serial.print(", Output: ");
+  Serial.println(PID_Loop.Position_to_Speed(0, 20));
 }
