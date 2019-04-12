@@ -11,7 +11,9 @@
  #include "Drive.h"
  
  Drive::Drive()
- {}
+ {
+	 initialize();
+ }
  
  Drive::Drive(int changePin)
  {
@@ -21,13 +23,13 @@
  
  void Drive::initialize()
  {
-	myESC.attach(PIN);
+	myESC.attach(pin);
 	armESC();
  }
  
  void Drive::setESCPin(int changePin)
  {
-	PIN = changePin;
+	pin = changePin;
  }
  void Drive::setPins(int changePin)
  {
@@ -36,7 +38,7 @@
  
  void Drive::armESC()
  {
-	 Serial.print("Arming... ");
+	 Serial.println("Arming... ");
 	 myESC.writeMicroseconds(1350);
 	 delay(1500);
 	 Serial.println("DONE");
@@ -74,6 +76,21 @@
 	
  }
  
+ int Drive::getEscMax()
+ {
+	 return maxThrottle;
+ }
+ 
+ int Drive::getEscMin()
+ {
+	 return brake;
+ }
+ 
+ int Drive::getEscNeutral()
+ {
+	 return neutral;
+ }
+ 
  // Remember to write down the values you used if you use the following method.
  void Drive::configureThrottle(int newNeutral, int newFullThrottle, int newBrake)
  {
@@ -87,7 +104,7 @@
 	delay(10000);
 	
 	myESC.write(maxThrottle);
-	Serial.println("Full Throttle: 2000");
+	Serial.println"Full Throttle: 2000");
 	delay(10000);
 			
 	myESC.writeMicroseconds(brake);
@@ -95,6 +112,7 @@
 	delay(10000);
 	
  }
+ 
  void Drive::printESC()
  {
 	 Serial.print("Neutral: ");
