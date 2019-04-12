@@ -11,75 +11,97 @@
  #include "Drive.h"
  
  Drive::Drive()
+ {}
+ 
+ Drive::Drive(int changePin)
  {
-	front.setPins(defaultPinsFront);
-	back.setPins(defaultPinsBack);
+	setESCPin(changePin); 
+	initialize();
  }
  
- Drive::Drive(int *pinsA, int *pinsB)
+ void Drive::initialize()
  {
-	 front.setPins(pinsA);
-	 back.setPins(pinsB);
- 
- }
- void Drive::setPinsFront(int *passedPins)
- {
-	 front.setPins(passedPins);
+	myESC.attach(PIN);
+	armESC();
  }
  
- void Drive::setPinsBack(int *passedPins)
+ void Drive::setESCPin(int changePin)
  {
-	 back.setPins(passedPins);
+	PIN = changePin;
+ }
+ void Drive::setPins(int changePin)
+ {
+	PIN = changePin;
  }
  
- void Drive::setPins(int *pinsFront, int *pinsBack)
+ void Drive::armESC()
  {
-	/* Serial.println("Setting Pins [Drive accessed]");
-	 for(int i = 0; i < 6; i++) {
-		Serial.print("Pin numbers: ");
-		Serial.print(pinsFront[i]);
-		Serial.print(",");
-		Serial.println(pinsBack[i]);
-	}
-	 */
-	 front.setPins(pinsFront);
-	 back.setPins(pinsBack);
- }
- 
- void Drive::move(int velocity)
- {
-	 front.moveBothWheels(velocity);
-	 back.moveBothWheels(-velocity);
+	 Serial.print("Arming... ");
+	 myESC.writeMicroseconds(1350);
+	 delay(1500);
+	 Serial.println("DONE");
  }
  
  
- void Drive::turn(int velocity)
+ void Drive::move(int pulseWidth)
  {
-	 front.moveWheelsOpposite(velocity);
-	 back.moveWheelsOpposite(velocity);
-		 
+	myESC.writeMicroseconds(pulseWidth);
  }
- void Drive::turnSingleWheelTest(int wheel, int speed)
+ 
+ 
+ 
+ /*
+ void Drive::turn(int angle)
  {
-	 switch(wheel)
-	 {
-		 case 0:
-			front.turnWheelA(speed);
-			//Serial.println("Front wheel A turned");
-		 break;
-		 case 1:
-			front.turnWheelB(speed);
-			//Serial.println("Front wheel B turned");
-		 break;
-		 case 2:
-			back.turnWheelA(speed);
-			//Serial.println("Back wheel A turned");
-		 break;
-		 case 3:
-			back.turnWheelB(speed);
-			//Serial.println("Back wheel B turned");
-		 break;
-		 default: Serial.println("Invalid number");
-	 }
+	//Implement for Servo steering
+ }
+ */
+ 
+ void Drive::configureThrottle()
+ {
+	
+	myESC.writeMicroseconds(1350);
+	Serial.println("Neutral Position: 1350");
+	delay(10000);
+	
+	myESC.write(2000);
+	Serial.println("Full Throttle: 2000");
+	delay(10000);
+			
+	myESC.writeMicroseconds(700);
+	Serial.println("Brake Position: 700");
+	delay(10000);
+	
+ }
+ 
+ // Remember to write down the values you used if you use the following method.
+ void Drive::configureThrottle(int newNeutral, int newFullThrottle, int newBrake)
+ {
+	
+	neutral = newNeutral;
+	maxThrottle = newFullThrottle;
+	brake = newBrake;
+	
+	myESC.writeMicroseconds(neutral);
+	Serial.println("Neutral Position: 1350");
+	delay(10000);
+	
+	myESC.write(maxThrottle);
+	Serial.println("Full Throttle: 2000");
+	delay(10000);
+			
+	myESC.writeMicroseconds(brake);
+	Serial.println("Brake Position: 700");
+	delay(10000);
+	
+ }
+ void Drive::printESC()
+ {
+	 Serial.print("Neutral: ");
+	 Serial.println(neutral);
+	 Serial.print("Max Throttle: ");
+	 Serial.println(maxThrottle);
+	 Serial.print("Brake: ");
+	 Serial.println(brake);
  }
  

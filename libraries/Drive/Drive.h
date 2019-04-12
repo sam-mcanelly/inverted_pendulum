@@ -10,33 +10,44 @@
  
  #ifndef Drive_h
  #define Drive_h
- #include <MotorController.h>
+ #include <ESC.h>
+ #include "Servo.h"
  
  class Drive {
 	 public:
 		
 		Drive();
-		Drive(int *pinsA, int *pinsB);
+		Drive(int changePin);
 		
-		void setPinsFront(int *passedPins);
-		void setPinsBack(int *passedPins);
-		void setPins(int *pinsFront, int *pinsBack);
-		
-		/*velocity is an integer from -255 to 255 with positive and negative representing direction
-		 * Positive = FORWARD (move) and LEFT (turn);
-		 * Negative = REVERSE (move) and Right(turn);
+		//Allows setting Motor Controller pins to nondefault ones.
+		void setESCPin(int changePin);
+		void setPins(int changePin);
+		void armESC();
+		void initialize();
+		/*Note: pulseWidth is a variable from 700 to 2000
+		 *      with: 1350 meaning no movement
+		 *			  700 meaning brake
+		 *			  < 1350 meaning reverse
+		 *			  > 1350 meaning throttle
 		 */
-		void turn(int velocity);
-		void move(int velocity);
-		void turnSingleWheelTest(int wheel, int speed);
+		
+		void move(int pulseWidth); //moves robot at specified speed and direction
+		
+		//void turn(int angle); // turns robot at specified speed and direction
+		
+		void configureThrottle();  //Most ESCs require you to calibrate it for different RC Remote values.
+		void configureThrottle(int newNeutral, int newFullThrottle, int newBrake);
+		
+		void printESC();
 		
 		//Note: default destructor should work fine
 		
 	 private:
-		MotorController front;
-		MotorController back;
-		int defaultPinsFront[6] = {6,A3,A2,5,A4,A5};
-		int defaultPinsBack[6] = {10,8,7,9,A1,A0};
+		int PIN = 9;
+		Servo myESC;
+		int neutral = 1350;
+		int maxThrottle = 2000;
+		int brake = 700;
  };
  
  #endif
