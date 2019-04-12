@@ -1,29 +1,29 @@
-#include "Receiver.h"
+#include <Receiver.h>
+#include <Drive.h>
 
 bool active = false;
-const int *channel_values;
-Receiver _receiver(A0, &active);
+Receiver _receiver;
+Drive _drive;
 
 void setup() {
   Serial.begin(9600);
   delay(500);
+
+  _drive.initialize();
 }
 
 void loop() {
   _receiver.update();
-  channel_values = _receiver.getAllChannels();
+  long _throttle_value = _receiver.getThrottleValue();
+  //Serial.println(_throttle_value);
+  _drive.move(_throttle_value);
+  delay(1);
   
-  Serial.print("Armed: ");
-  Serial.println(active);
+  //Serial.print("Armed: ");
+  //Serial.println(active);
 
-  Serial.println("---- Channel Values ----");
-  for(int i = 0; i < CHANNEL_COUNT; i++) {
-    Serial.print("  ");
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(channel_values[i]);
-  }
-  Serial.println("\n");
+  
+  //Serial.println(_throttle_value);
 
-  delay(500);
 }
+

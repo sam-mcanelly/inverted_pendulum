@@ -16,15 +16,15 @@
 #include "Drive.h"
 #include "MotorController.h"
 #include "Encoder.h"
-#include "FastPID.h"
-//#include "Receiver.h"
+#include "PID_Loop.h"
+#include "Receiver.h"
 
 #define MAX_ANGLE_TICKS 86 //used to set max speed (this is 30 degrees off center if center is 0)
 #define MIN_PWM -255
 #define MAX_PWM 255
 
-#define min_start_threshold -50
-#define max_start_threshold 50
+#define min_start_threshold -20
+#define max_start_threshold 20
 #define within_range(a) (((a) > (min_start_threshold)) && ((a) < (max_start_threshold)))
 
 enum channel_t {
@@ -53,10 +53,10 @@ class Director {
 
     private:
         bool active;
-        //Receiver* receiver;
+        static Receiver receiver;
         static Encoder encoder;
         Drive driver;
-        static FastPID pid_controller;
+        PIDLoop pid_controller;
         static bool is_init;
         //Drive drive;
 

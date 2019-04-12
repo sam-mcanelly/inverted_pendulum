@@ -8,13 +8,9 @@
  * Spring 2019
  *
  */
-#include <stdio.h>
-
 #include "Director.h"
 
 bool Director::is_init = false;
-// arguments; (P, I, D, Hz, bits, signed)
-FastPID Director::pid_controller(2.8, 1.5, 0.0, 100, 16, true);
 
 void Director::init() 
 {
@@ -22,14 +18,15 @@ void Director::init()
 
     active=true;
 
-    Serial.println("Setting PID range");
-    pid_controller.setOutputRange(MIN_PWM, MAX_PWM);
-    delay(2000);
-
     Serial.println("Initializing Encoder");
     delay(1000);
     encoder.init();
     Serial.println("Encoder initialized");
+
+    pid_controller.initialize();
+    
+
+    driver.initialize();
 
     is_init = true;
 
@@ -67,32 +64,20 @@ void Director::reset()
 
 void Director::loop()
 {
-    unsigned long cur_time, last_time = 0;
     int set_point, input, output = 0; 
 
     while(active == true) {
         //receiver->update();
-        cur_time = millis();
-
-        // 10m is 100hz
-        if(cur_time - last_time > 10)
-        {
-            input = encoder.getPosition();
-            if(input > 400 || input < -400) 
-            {
-                break;
-            }
-            output = pid_controller.step(set_point, input);
-            Serial.print("input: ");
-            Serial.print(input);
-            Serial.print("output:");
-            Serial.println(output);
-            driver.move(output);
+        input = encoder.getPosition();
+        if(input > 400 || input < -400) { 
+            driver.move(1350);
+            break;
         }
-
-        last_time = cur_time;
+        output = pid_controller.position_to_speed(set_point, input);
+        //Serial.println(encoder.getPosition());
+        Serial.println(output);
+        driver.move(output);
         /*convert_throttle(receiver->getChannelValue(throttle));*/
-        
     }
 
     reset();
