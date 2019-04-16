@@ -8,42 +8,73 @@
  * Spring 2019
  *
  */
-
 #include "Director.h"
+
+bool Director::is_init = false;
+
+void Director::init() 
+{
+    if(is_init) return;
+
+    active=true;
+    driver.initialize();
+
+    Serial.println("Initializing Encoder");
+    delay(3000);
+    encoder.init();
+    Serial.println("Encoder initialized");
+
+    pid_controller.initialize();
+
+    is_init = true;
+
+}
 
 void Director::reset()
 {
+    if(!is_init)
+    {
+        Serial.println("Cannot start Director! Improper config");
+        return;
+    }
+
+    Serial.println("Waiting for active signal");
+
     //constantly loop and look for an arm signal
     while(active == false) {
         //do nothing and wait
-        receiver->update();
+        //receiver->update();
     }
 
     int starting_position = encoder.getPosition();
 
+    Serial.println("Starting encoder value: ");
+
     //wait for pendulum to be in an acceptable start range
     while(!within_range(starting_position)) {
         starting_position = encoder.getPosition();
+        Serial.println("Warning! Pendulum out of range...");
     }
 
+    Serial.println("Starting PID Loop");
     loop();
 }
 
 void Director::loop()
 {
-    //create PID controller object here
-    double set_point, input, output;
-    //ex:
+    int input, output, throttle_val = 0; 
 
     while(active == true) {
-        receiver->update();
-
-        set_point = convert_throttle(receiver->getChannelValue(throttle));
+        receiver.update();
+        throttle_val = receiver.getThrottleValue();
+        set_point = throttle_val; //converted already
         input = encoder.getPosition();
-        //compute PID
-        //(maybe convert output here to another value)
-        //(could also be handled in the motor_controller object)
-        //motor_controller->set_motors(output);
+        if(input > 400 || input < -400) { 
+            driver.move(1350);
+            break;
+        }
+        output = pid_controller.positionToSpeed(set_point, input);
+        driver.move(output);
     }
 
     reset();

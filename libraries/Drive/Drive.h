@@ -10,8 +10,8 @@
  
  #ifndef Drive_h
  #define Drive_h
- #include "Servo.h"
  #include "Arduino.h"
+ #include "Servo.h"
  
  class Drive {
 	 public:
@@ -23,8 +23,9 @@
 		void setESCPin(int changePin);
 		void setPins(int changePin);
 		void armESC();
-		void initialize();
 		
+		//Must always be called
+		void initialize();
 		/*Note: pulseWidth is a variable from 700 to 2000
 		 *      with: 1350 meaning no movement
 		 *			  700 meaning brake
@@ -40,9 +41,6 @@
 		void configureThrottle(int newNeutral, int newFullThrottle, int newBrake);
 		
 		void printESC();
-		int getEscMax();
-		int getEscMin();
-		int getEscNeutral();
 		
 		//Note: default destructor should work fine
 		

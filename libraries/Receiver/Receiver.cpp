@@ -14,43 +14,12 @@
 //      turn off interrupts? (time this function)
 void Receiver::update() 
 {
-    bool updated = false;
-    int i = 0;
-
-    long start_time = micros();
-
-    while(!updated) {
-        if(pulseIn(pin, LOW, UPDATE_TIMEOUT_THRESHOLD) >= SYNC_DELAY) {
-            for(i = 0; i < CHANNEL_COUNT; i++) {
-                channel_values[i] = pulseIn(pin, LOW, CHANNEL_TIMEOUT_THRESHOLD);
-            }
-
-            if(channel_values[ARM_CHANNEL] > ACTIVE_THRESHOLD) {
-                *active = true;
-            } else {
-                *active = false;
-            }
-
-            updated = true;
-        }
-
-        if(micros() - start_time > UPDATE_TIMEOUT_THRESHOLD) {
-            Serial.println("Error: PPM signal not found!");
-            return;
-        }
-    }
+    long ret = pulseIn(_pin, LOW);
+    ret = map(ret, 14000, 15000, -30, 30);
+    _throttle_value = ret;
 }
 
-int Receiver::getChannelValue(int channel)
+int Receiver::getThrottleValue()
 {
-    //check bounds
-    if(channel < 1 || channel > CHANNEL_COUNT)
-        return -1;
-    
-    return channel_values[channel - 1];
-}
-
-const int *Receiver::getAllChannels()
-{
-    return channel_values;
+    return _throttle_value;
 }

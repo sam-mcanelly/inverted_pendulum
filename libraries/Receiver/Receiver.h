@@ -17,28 +17,33 @@
 #define CHANNEL_COUNT 3
 #define ARM_CHANNEL 2
 #define ACTIVE_THRESHOLD 1500
-#define UPDATE_TIMEOUT_THRESHOLD 20000 //us
+#define UPDATE_TIMEOUT_THRESHOLD 200000 //us
 #define CHANNEL_TIMEOUT_THRESHOLD 3000 //us
 
 class Receiver {
     public:
-        Receiver(int pin, bool *active)
+        Receiver()
         {
-            //set pin
+            _throttle_value = 0;
+            _pin = 4;
+            pinMode(_pin, INPUT);
+        }
+        Receiver(int pin, bool active)
+        {
+            _throttle_value = 0;
             _pin = pin;
             pinMode(pin, INPUT);
-            _active = active;
         }
 
         ~Receiver() { }
 
         void update();
-        int getChannelValue(int channel);
-        const int *getAllChannels();
+        int getThrottleValue();
+        //const int *getAllChannels();
 
     private:
-        bool *_active;
-        int channel_values[3] = {1000, 1000, 1000};
+        //bool _active;
+        int _throttle_value;
         int _pin;
 };
 

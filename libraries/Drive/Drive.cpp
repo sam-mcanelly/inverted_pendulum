@@ -12,13 +12,11 @@
  
  Drive::Drive()
  {
-	 initialize();
  }
  
  Drive::Drive(int changePin)
  {
 	setESCPin(changePin); 
-	initialize();
  }
  
  void Drive::initialize()
@@ -33,15 +31,13 @@
  }
  void Drive::setPins(int changePin)
  {
-	PIN = changePin;
+	pin = changePin;
  }
  
  void Drive::armESC()
  {
-	 Serial.println("Arming... ");
 	 myESC.writeMicroseconds(1350);
-	 delay(1500);
-	 Serial.println("DONE");
+	 delay(3000);
  }
  
  
@@ -61,7 +57,6 @@
  
  void Drive::configureThrottle()
  {
-	
 	myESC.writeMicroseconds(1350);
 	Serial.println("Neutral Position: 1350");
 	delay(10000);
@@ -76,25 +71,9 @@
 	
  }
  
- int Drive::getEscMax()
- {
-	 return maxThrottle;
- }
- 
- int Drive::getEscMin()
- {
-	 return brake;
- }
- 
- int Drive::getEscNeutral()
- {
-	 return neutral;
- }
- 
  // Remember to write down the values you used if you use the following method.
  void Drive::configureThrottle(int newNeutral, int newFullThrottle, int newBrake)
  {
-	
 	neutral = newNeutral;
 	maxThrottle = newFullThrottle;
 	brake = newBrake;
@@ -104,7 +83,7 @@
 	delay(10000);
 	
 	myESC.write(maxThrottle);
-	Serial.println"Full Throttle: 2000");
+	Serial.println("Full Throttle: 2000");
 	delay(10000);
 			
 	myESC.writeMicroseconds(brake);
@@ -112,7 +91,6 @@
 	delay(10000);
 	
  }
- 
  void Drive::printESC()
  {
 	 Serial.print("Neutral: ");
