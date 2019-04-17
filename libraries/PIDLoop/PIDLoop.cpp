@@ -3,8 +3,7 @@
 #define LOWRANGE -650 //Low range for driving robot
 #define HIGHRANGE 650 //High range for driving robot
 
-//P = 4.5
-FastPID PIDLoop::fastPID(4.5, 1, 0, HZ, BITS, true);
+FastPID PIDLoop::fastPID(4.5, 0, 0, HZ, BITS, true);
 
 bool PIDLoop::initialize() { //Set up PID Loop
   last_time = micros();

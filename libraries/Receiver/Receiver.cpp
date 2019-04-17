@@ -1,6 +1,7 @@
 /* Receiver.cpp
  *
- * Class for reading and interpretting PPM Input
+ * Class for reading and interpretting 
+ * pulse length on an analog pin
  *
  * Sam McAnelly
  * Oklahoma State University
@@ -10,13 +11,17 @@
 
 #include "Receiver.h"
 
-//TODO: sanity check on values? (test to see if necessary)
-//      turn off interrupts? (time this function)
 void Receiver::update() 
 {
     long ret = pulseIn(_pin, LOW);
-    ret = map(ret, 14000, 15000, -30, 30);
-    _throttle_value = ret;
+    if(ret > 15000 || ret < 14000)
+    {
+        _throttle_value = 0;
+    }
+    else {
+        ret = map(ret, 14000, 15000, -30, 30);
+        _throttle_value = ret;
+    }
 }
 
 int Receiver::getThrottleValue()

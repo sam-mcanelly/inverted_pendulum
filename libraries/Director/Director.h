@@ -14,6 +14,7 @@
 
 #include "Arduino.h"
 #include "Drive.h"
+#include "MotorController.h"
 #include "Encoder.h"
 #include "PIDLoop.h"
 #include "Receiver.h"
