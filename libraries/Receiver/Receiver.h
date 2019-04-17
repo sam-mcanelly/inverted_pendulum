@@ -25,12 +25,16 @@ class Receiver {
     public:
         Receiver()
         {
+            _throttle_max = 30;
+            _throttle_min = -30;
             _throttle_value = 0;
             _pin = 4;
             pinMode(_pin, INPUT);
         }
-        Receiver(int pin, bool active)
+        Receiver(int pin, int t_max, int t_min)
         {
+            _throttle_max = t_max;
+            _throttle_min = t_min;
             _throttle_value = 0;
             _pin = pin;
             pinMode(pin, INPUT);
@@ -40,8 +44,12 @@ class Receiver {
 
         void update();
         int getThrottleValue();
+        int getThrottleMax();
+        int getThrottleMin();
 
     private:
+        int _throttle_max;
+        int _throttle_min;
         int _throttle_value;
         int _pin;
 };

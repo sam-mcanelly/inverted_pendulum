@@ -16,18 +16,35 @@ void Director::init()
 {
     if(is_init) return;
 
+    int throttle_value = 1350;
+    //arm esc by pulling full throttle on the controller
+    while(throttle_value != receiver.getThrottleMax())
+    {
+        receiver.update();
+        throttle_value = receiver.getThrottleValue();
+    }
+
     active=true;
     driver.initialize();
 
-    Serial.println("Initializing Encoder");
-    delay(3000);
+    //set zero of pendulum with full reverse throttle
+    while(throttle_value != receiver.getThrottleMin())
+    {
+        receiver.update();
+        throttle_value = receiver.getThrottleValue();
+    }
     encoder.init();
-    Serial.println("Encoder initialized");
 
-    pid_controller.initialize();
+    //make motors whine for half a second to signify 
+    //encoder initialization
+    driver.move(1400);
+    delay(500);
+    driver.move(1350);
+
+    motor_pid.initialize(1000, 3.336, 0.0, 7.0, -650, 650);
+    direction_pid.initialize(100, 5.0, 0.0, 0.0, -30, 30);
 
     is_init = true;
-
 }
 
 void Director::reset()
@@ -37,51 +54,36 @@ void Director::reset()
         Serial.println("Cannot start Director! Improper config");
         return;
     }
-
-    Serial.println("Waiting for active signal");
-
-    //constantly loop and look for an arm signal
-    while(active == false) {
-        //do nothing and wait
-        //receiver->update();
-    }
-
     int starting_position = encoder.getPosition();
-
-    Serial.println("Starting encoder value: ");
 
     //wait for pendulum to be in an acceptable start range
     while(!within_range(starting_position)) {
         starting_position = encoder.getPosition();
-        Serial.println("Warning! Pendulum out of range...");
     }
 
-    Serial.println("Starting PID Loop");
     loop();
 }
 
 void Director::loop()
 {
-    int input, output, throttle_val = 0; 
+    int encoder_input, encoder_set_point = 0; 
+    int throttle_val = 1350;
 
     while(active == true) {
         receiver.update();
         throttle_val = receiver.getThrottleValue();
-        set_point = throttle_val; //converted already
-        input = encoder.getPosition();
-        if(input > 400 || input < -400) { 
+        motor_set_point = throttle_val;
+        encoder_set_point = motor_pid.compute(motor_set_point, motor_output);
+        encoder_input = encoder.getPosition();
+
+        //failure condition
+        if(encoder_input > 400 || encoder_input < -400) { 
             driver.move(1350);
             break;
         }
-        output = pid_controller.positionToSpeed(set_point, input);
-        driver.move(output);
+        motor_output = motor_pid.compute(encoder_set_point, encoder_input) + 1350;
+        driver.move(motor_output);
     }
 
     reset();
-}
-
-int Director::convert_throttle(int throttle_value)
-{
-    //normalize throttle value to range specified by MAX_ANGLE_TICKS
-    return (int)((throttle_value - 1500) / MAX_ANGLE_TICKS);
 }
