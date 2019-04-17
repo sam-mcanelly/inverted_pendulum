@@ -18,7 +18,7 @@
 #define ENCODER_INTERRUPT 4
 #define PIN_A 2
 #define PIN_B 3
-#define START_TICKS 0 //parallel to ground (1/4 of 1024)
+#define START_TICKS -1113 //parallel to ground (1/4 of 1024)
 
 class Encoder {
     public:

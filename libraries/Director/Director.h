@@ -16,7 +16,7 @@
 #include "Drive.h"
 #include "MotorController.h"
 #include "Encoder.h"
-#include "PID_Loop.h"
+#include "PIDLoop.h"
 #include "Receiver.h"
 
 #define MAX_ANGLE_TICKS 86 //used to set max speed (this is 30 degrees off center if center is 0)
@@ -36,13 +36,12 @@ class Director {
     public:
         Director(/*int receiver_pin, int motor_pins[4]*/)
         {
+            set_point = 0;
             is_init = false;
-            //receiver = new Receiver(receiver_pin, &active);
         };
 
         ~Director()
         {
-            //delete receiver;
             //delete other dynamically allocated objects
         }
 
@@ -52,19 +51,17 @@ class Director {
         void reset();
 
     private:
-        bool active;
-        static Receiver receiver;
         static Encoder encoder;
+        static bool is_init;
+        int set_point;
+        bool active;
+
+        Receiver receiver;
         Drive driver;
         PIDLoop pid_controller;
-        static bool is_init;
-        //Drive drive;
 
         //main control loop
         void loop();
-
-        //int getThrottleValue() { return receiver->getChannelValue(throttle); }
-        //int getTurnValue() { return receiver->getChannelValue(turn); }
 
         //convert the throttle value to a set_point value
         //this will allow the cart to go backwards or forwards

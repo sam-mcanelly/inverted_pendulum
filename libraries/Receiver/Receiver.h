@@ -1,7 +1,8 @@
 /* Receiver.h
  *
- * Class for reading and interpretting PPM Input
- *
+ * Class for reading and interpretting 
+ * pulse length on an analog pin
+ * 
  * Sam McAnelly
  * Oklahoma State University
  * Spring 2019
@@ -39,10 +40,8 @@ class Receiver {
 
         void update();
         int getThrottleValue();
-        //const int *getAllChannels();
 
     private:
-        //bool _active;
         int _throttle_value;
         int _pin;
 };

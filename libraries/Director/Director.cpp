@@ -17,16 +17,14 @@ void Director::init()
     if(is_init) return;
 
     active=true;
+    driver.initialize();
 
     Serial.println("Initializing Encoder");
-    delay(1000);
+    delay(3000);
     encoder.init();
     Serial.println("Encoder initialized");
 
     pid_controller.initialize();
-    
-
-    driver.initialize();
 
     is_init = true;
 
@@ -64,20 +62,19 @@ void Director::reset()
 
 void Director::loop()
 {
-    int set_point, input, output = 0; 
+    int input, output, throttle_val = 0; 
 
     while(active == true) {
-        //receiver->update();
+        receiver.update();
+        throttle_val = receiver.getThrottleValue();
+        set_point = throttle_val; //converted already
         input = encoder.getPosition();
         if(input > 400 || input < -400) { 
             driver.move(1350);
             break;
         }
-        output = pid_controller.position_to_speed(set_point, input);
-        //Serial.println(encoder.getPosition());
-        Serial.println(output);
+        output = pid_controller.positionToSpeed(set_point, input);
         driver.move(output);
-        /*convert_throttle(receiver->getChannelValue(throttle));*/
     }
 
     reset();
