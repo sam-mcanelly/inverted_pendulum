@@ -15,36 +15,39 @@ bool Director::is_init = false;
 void Director::init() 
 {
     if(is_init) return;
+    active=true;
 
     int throttle_value = 1350;
     //arm esc by pulling full throttle on the controller
-    while(throttle_value != receiver.getThrottleMax())
+    while(throttle_value < receiver.getThrottleMax())
     {
         receiver.update();
         throttle_value = receiver.getThrottleValue();
     }
-
-    active=true;
+    Serial.println("Arming ESC!");
     driver.initialize();
 
     //set zero of pendulum with full reverse throttle
-    while(throttle_value != receiver.getThrottleMin())
+    while(throttle_value > receiver.getThrottleMin())
     {
         receiver.update();
         throttle_value = receiver.getThrottleValue();
     }
+    Serial.println("Initializing encoder!");
     encoder.init();
 
     //make motors whine for half a second to signify 
     //encoder initialization
-    driver.move(1400);
-    delay(500);
+    driver.move(1370);
+    delay(300);
     driver.move(1350);
 
-    motor_pid.initialize(1000, 3.336, 0.0, 7.0, -650, 650);
-    direction_pid.initialize(100, 5.0, 0.0, 0.0, -30, 30);
+    Serial.println("Initializing PID Loops");
+    motor_pid.initialize(500, 4.78/*3.87*/, 0.0, 2.0, -650, 650);
+    direction_pid.initialize(100, 0.32, 0.0, 0.0, -15, 15);
 
     is_init = true;
+    reset();
 }
 
 void Director::reset()
@@ -59,7 +62,11 @@ void Director::reset()
     //wait for pendulum to be in an acceptable start range
     while(!within_range(starting_position)) {
         starting_position = encoder.getPosition();
+        //receiver.update();
+        //int val = receiver.getThrottleValue();
     }
+
+    Serial.println("Starting loop!");
 
     loop();
 }
@@ -73,7 +80,7 @@ void Director::loop()
         receiver.update();
         throttle_val = receiver.getThrottleValue();
         motor_set_point = throttle_val;
-        encoder_set_point = motor_pid.compute(motor_set_point, motor_output);
+        encoder_set_point = direction_pid.compute(motor_set_point, motor_output);
         encoder_input = encoder.getPosition();
 
         //failure condition

@@ -14,15 +14,9 @@
 void Receiver::update() 
 {
     long ret = pulseIn(_pin, LOW);
-    if(ret > 15000 || ret < 14000)
-    {
-        _throttle_value = 1350;
-    }
-    else {
-        ret = map(ret, 14000, 15000, -300, 300);
-        ret += 1350;
-        _throttle_value = ret;
-    }
+    ret = map(ret, 14000, 15000, -300, 300);
+    ret += 1350;
+    _throttle_value = ret;
 }
 
 int Receiver::getThrottleValue()

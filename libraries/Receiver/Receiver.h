@@ -25,8 +25,8 @@ class Receiver {
     public:
         Receiver()
         {
-            _throttle_max = 30;
-            _throttle_min = -30;
+            _throttle_max = 1600;
+            _throttle_min = 1100;
             _throttle_value = 0;
             _pin = 4;
             pinMode(_pin, INPUT);
