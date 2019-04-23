@@ -16,7 +16,7 @@ void Director::init()
 {
     if(is_init) return;
     active=true;
-
+	
     int throttle_value = 1350;
     //arm esc by pulling full throttle on the controller
     while(throttle_value < receiver.getThrottleMax())
@@ -26,6 +26,7 @@ void Director::init()
     }
     Serial.println("Arming ESC!");
     driver.initialize();
+	driver.configureRevGain(0.84);
 
     //set zero of pendulum with full reverse throttle
     while(throttle_value > receiver.getThrottleMin())
@@ -38,13 +39,15 @@ void Director::init()
 
     //make motors whine for half a second to signify 
     //encoder initialization
-    driver.move(1370);
-    delay(300);
+    driver.move(1365);
+    delay(1000);
     driver.move(1350);
 
     Serial.println("Initializing PID Loops");
-    motor_pid.initialize(500, 4.78/*3.87*/, 0.0, 2.0, -650, 650);
-    direction_pid.initialize(100, 0.32, 0.0, 0.0, -15, 15);
+	//original (500,4.78,0.0,2.0,-650,650)
+    motor_pid.initialize(500, 6.8/*3.87*/, 0, 8.5, -650, 650);
+	//original (100, 0.32, 0.0, 0.0, -15, 15)
+    direction_pid.initialize(100, 0.05, 0.0, 0, -15, 15);
 
     is_init = true;
     reset();
@@ -91,6 +94,5 @@ void Director::loop()
         motor_output = motor_pid.compute(encoder_set_point, encoder_input) + 1350;
         driver.move(motor_output);
     }
-
     reset();
 }

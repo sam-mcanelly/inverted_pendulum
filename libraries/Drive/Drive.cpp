@@ -14,9 +14,15 @@
  {
  }
  
- Drive::Drive(int changePin)
+ Drive::Drive(double reverseGain)
+ {
+	 revGain = reverseGain;
+ }
+ 
+ Drive::Drive(int changePin, double reverseGain)
  {
 	setESCPin(changePin); 
+	revGain = reverseGain;
  }
  
  void Drive::initialize()
@@ -43,6 +49,11 @@
  
  void Drive::move(int pulseWidth)
  {
+	 int tempWidth = pulseWidth;
+	 if(tempWidth < 1350)
+		tempWidth = pulseWidth * revGain;
+	 if(tempWidth < 700)
+		 tempWidth = 700;
 	myESC.writeMicroseconds(pulseWidth);
  }
  
@@ -54,7 +65,10 @@
 	//Implement for Servo steering
  }
  */
- 
+ void Drive::configureRevGain(double reverseGain)
+ {
+	 revGain = reverseGain;
+ }
  void Drive::configureThrottle()
  {
 	myESC.writeMicroseconds(1350);
@@ -79,16 +93,19 @@
 	brake = newBrake;
 	
 	myESC.writeMicroseconds(neutral);
-	Serial.println("Neutral Position: 1350");
-	delay(10000);
+	Serial.print("Neutral Position: ");
+	Serial.println(neutral);
+	delay(5000);
 	
 	myESC.write(maxThrottle);
-	Serial.println("Full Throttle: 2000");
-	delay(10000);
+	Serial.print("Full Throttle: ");
+	Serial.println(maxThrottle);
+	delay(5000);
 			
 	myESC.writeMicroseconds(brake);
-	Serial.println("Brake Position: 700");
-	delay(10000);
+	Serial.print("Brake Position: ");
+	Serial.println(brake);
+	delay(5000);
 	
  }
  void Drive::printESC()
