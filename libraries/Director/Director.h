@@ -14,7 +14,6 @@
 
 #include "Arduino.h"
 #include "Drive.h"
-#include "MotorController.h"
 #include "Encoder.h"
 #include "PIDLoop.h"
 #include "Receiver.h"
@@ -38,7 +37,8 @@ class Director {
         };
 
         void init();
-
+		
+		//Luis testing only! Do not apply to git.
         //start and stop control loop
         void reset();
 
@@ -47,7 +47,7 @@ class Director {
         static bool is_init;
         int motor_set_point;
         int motor_output;
-        bool active;
+		bool active;
 
         Receiver receiver;
         Drive driver;
