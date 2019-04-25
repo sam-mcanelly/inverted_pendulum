@@ -14,7 +14,7 @@
 void Receiver::update() 
 {
     long ret = pulseIn(_pin, LOW);
-    ret = map(ret, 14000, 15000, -300, 300);
+    ret = map(ret, 14000, 15000, -200, 200);
     ret += 1350;
     _throttle_value = ret;
 }

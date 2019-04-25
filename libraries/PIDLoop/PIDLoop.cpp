@@ -1,6 +1,14 @@
-#include "PIDLoop.h"
+/* PIDLoop.cpp
+ *
+ * Wrapper class for FastPID
+ *
+ * Sam McAnelly
+ * Oklahoma State University
+ * Spring 2019
+ *
+ */
 
-//FastPID PIDLoop::fastPID(1.0, 1.0, 1.0, HZ, BITS, true);
+#include "PIDLoop.h"
 
 bool PIDLoop::initialize(int hz, float p, float i, float d,
                          int low_range, int high_range) { //Set up PID Loop
@@ -19,6 +27,11 @@ void PIDLoop::updateP(float new_p)
 {
   _p = new_p;
   fastPID.setCoefficients(_p, _i, _d, _hz);
+}
+
+void PIDLoop::clear()
+{
+  fastPID.clear();
 }
 
 int PIDLoop::compute(int desired_position, int current_position) {

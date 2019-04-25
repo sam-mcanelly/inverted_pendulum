@@ -1,3 +1,13 @@
+/* PIDLoop.h
+ *
+ * Wrapper class for FastPID
+ *
+ * Sam McAnelly
+ * Oklahoma State University
+ * Spring 2019
+ *
+ */
+
 #ifndef PIDLoop_h
 #define PIDLoop_h
 
@@ -18,6 +28,7 @@ public:
                     int low_range, int high_range); //Sets up PID Loop
     int compute(int desired_position, int current_position); //Runs the PID Loop
     void updateP(float new_p);
+    void clear();
     
 private:
     FastPID fastPID; //PID code that handles PID calculation

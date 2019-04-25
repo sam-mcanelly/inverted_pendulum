@@ -8,6 +8,7 @@
  * Spring 2019
  *
  */
+
 #include "Director.h"
 
 bool Director::is_init = false;
@@ -18,15 +19,36 @@ void Director::init()
     active=true;
 	
     int throttle_value = 1350;
+
     //arm esc by pulling full throttle on the controller
     while(throttle_value < receiver.getThrottleMax())
     {
         receiver.update();
         throttle_value = receiver.getThrottleValue();
     }
-    Serial.println("Arming ESC!");
     driver.initialize();
-	driver.configureRevGain(0.84);
+	driver.configureRevGain(0.78);
+
+    //make motors whine for half a second to signify 
+    //encoder initialization
+    driver.move(1368);
+    delay(1000);
+    driver.move(1350);
+
+    motor_pid.initialize(500, 7.0, 1.8, 10.0, -350, 350);
+    direction_pid.initialize(100, 0.12, 0.0, 0.0, -15, 15);
+
+    is_init = true;
+}
+
+void Director::reset()
+{
+    if(!is_init)
+    {
+        return;
+    }
+
+    int throttle_value = 1350;
 
     //set zero of pendulum with full reverse throttle
     while(throttle_value > receiver.getThrottleMin())
@@ -34,65 +56,47 @@ void Director::init()
         receiver.update();
         throttle_value = receiver.getThrottleValue();
     }
-    Serial.println("Initializing encoder!");
+    motor_pid.clear();
+    direction_pid.clear();
     encoder.init();
 
-    //make motors whine for half a second to signify 
-    //encoder initialization
-    driver.move(1365);
-    delay(1000);
-    driver.move(1350);
+    motor_output = 1350;
 
-    Serial.println("Initializing PID Loops");
-	//original (500,4.78,0.0,2.0,-650,650)
-    motor_pid.initialize(500, 6.8/*3.87*/, 0, 8.5, -650, 650);
-	//original (100, 0.32, 0.0, 0.0, -15, 15)
-    direction_pid.initialize(100, 0.05, 0.0, 0, -15, 15);
-
-    is_init = true;
-    reset();
-}
-
-void Director::reset()
-{
-    if(!is_init)
-    {
-        Serial.println("Cannot start Director! Improper config");
-        return;
-    }
-    int starting_position = encoder.getPosition();
-
-    //wait for pendulum to be in an acceptable start range
-    while(!within_range(starting_position)) {
-        starting_position = encoder.getPosition();
-        //receiver.update();
-        //int val = receiver.getThrottleValue();
-    }
-
-    Serial.println("Starting loop!");
+    active = true;
 
     loop();
 }
 
 void Director::loop()
 {
-    int encoder_input, encoder_set_point = 0; 
-    int throttle_val = 1350;
+    int encoder_input, encoder_set_point, cycle_counter = 0; 
+    int throttle_val, new_motor_output = 1350;
+
 
     while(active == true) {
-        receiver.update();
-        throttle_val = receiver.getThrottleValue();
+        if(cycle_counter == 100) {
+            receiver.update();
+            throttle_val = receiver.getThrottleValue();
+            cycle_counter = 0;
+        } else {
+            cycle_counter++;
+        }
         motor_set_point = throttle_val;
-        encoder_set_point = direction_pid.compute(motor_set_point, motor_output);
         encoder_input = encoder.getPosition();
 
         //failure condition
-        if(encoder_input > 400 || encoder_input < -400) { 
+        if(encoder_input > 300 || encoder_input < -300) { 
             driver.move(1350);
+            active = false;
             break;
         }
-        motor_output = motor_pid.compute(encoder_set_point, encoder_input) + 1350;
-        driver.move(motor_output);
+        encoder_set_point = direction_pid.compute(motor_set_point, motor_output);
+        new_motor_output = motor_pid.compute(encoder_set_point, encoder_input) + 1350;
+
+        if(new_motor_output != motor_output) {
+            motor_output = new_motor_output;
+            driver.move(motor_output);
+        }
     }
     reset();
 }
